@@ -1,31 +1,25 @@
-import "@testing-library/jest-dom";
+import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import EyesOnMe from "../components/EyesOnMe";
 
-beforeEach(() => {
+test("renders a button with the text 'Eyes on me'", () => {
   render(<EyesOnMe />);
+  const button = screen.queryByText(/eyes on me/i);
+  expect(button).toBeInTheDocument();
 });
 
-test('displays a button with the text "Eyes on me"', () => {
-  expect(screen.queryByText(/Eyes on me/)).toBeInTheDocument();
-});
-
-test("focusing the button triggers console output", () => {
+test("logs 'Good!' when the button is focused", () => {
   console.log = jest.fn();
-
-  const button = screen.queryByText(/Eyes on me/);
+  render(<EyesOnMe />);
+  const button = screen.getByText(/eyes on me/i);
   fireEvent.focus(button);
-
-  expect(console.log).toHaveBeenCalled();
-  expect(console.log.mock.calls[0][0]).toBe("Good!");
+  expect(console.log).toHaveBeenCalledWith("Good!");
 });
 
-test("removing focus (blur) on the button triggers console output", () => {
+test("logs 'Hey! Eyes on me!' when the button loses focus", () => {
   console.log = jest.fn();
-
-  const button = screen.queryByText(/Eyes on me/);
+  render(<EyesOnMe />);
+  const button = screen.getByText(/eyes on me/i);
   fireEvent.blur(button);
-
-  expect(console.log).toHaveBeenCalled();
-  expect(console.log.mock.calls[0][0]).toBe("Hey! Eyes on me!");
+  expect(console.log).toHaveBeenCalledWith("Hey! Eyes on me!");
 });
